@@ -7,6 +7,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import java.util.List;
+
 @Controller
 public class AppController {
     @Autowired
@@ -24,7 +26,16 @@ public class AppController {
     public String successfulRegistration(Users user){
         BCryptPasswordEncoder passwordEncode=new BCryptPasswordEncoder();
         String encodedPassword=passwordEncode.encode(user.getPassword());
+        user.setPassword(encodedPassword);
         repository.save(user);
         return "successful";
     }
+
+    @GetMapping("/users")
+    public String listUsers(Model model){
+        List<Users> listUsers=repository.findAll();
+        model.addAttribute("listUsers",listUsers);
+        return "users";
+    }
+
 }
